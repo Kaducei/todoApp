@@ -62,10 +62,11 @@ export default class App extends Component {
   };
 
   addTask = (label) => {
+    this.maxId += 1;
     const newTask = {
       label,
       done: false,
-      id: this.maxId + 1,
+      id: this.maxId,
       creationTime: Number(new Date()),
       dateDistance: 'created less than a minute ago',
       editing: false,
