@@ -22,7 +22,6 @@ function Task({ label, onToggleDone, id, done, onDeleted, dateDistance, changeLa
           }}
           id={id}
         />
-
         <label className="taskLabel" htmlFor={id}>
           <span className="description">{label}</span>
           <span className="created">created {dateDistance}</span>
@@ -34,6 +33,7 @@ function Task({ label, onToggleDone, id, done, onDeleted, dateDistance, changeLa
             onEdit(id);
           }}
         />
+        button
         <button type="button" className="icon icon-destroy" onClick={onDeleted} />
       </div>
       <input
