@@ -74,8 +74,11 @@ function Task({ id, onDeleted, label, onToggleDone, creationTime, done, seconds,
         <label className="taskLabel" htmlFor={id}>
           <span className="description">{name}</span>
           <span className="item-timer">
-            <button type="button" className="icon-play" onClick={handleStart} />
-            <button type="button" className="icon-pause" onClick={handleStop} />
+            {isCounting ? (
+              <button type="button" className="icon-pause" onClick={handleStop} />
+            ) : (
+              <button type="button" className="icon-play" onClick={handleStart} />
+            )}
             <span className="total-time">{`${mins} min ${sec} sec`}</span>
           </span>
           <span className="created">{dateDistance}</span>

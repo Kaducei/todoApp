@@ -92,7 +92,7 @@ body {
 .toggle-all {
   width: 1px;
   height: 1px;
-  border: none; /* Mobile Safari */
+  border: none;
   opacity: 0;
   position: absolute;
   right: 100%;
