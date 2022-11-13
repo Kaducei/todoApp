@@ -1,158 +1,73 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { formatDistanceToNow } from 'date-fns';
 
 import Footer from '../Footer';
 import NewTaskForm from '../NewTaskForm';
 import TaskList from '../TaskList';
 
-export default class App extends Component {
-  constructor() {
-    super();
-    this.maxId = 100;
-    this.state = {
-      filter: 'all',
-      taskList: [
-        {
-          label: 'Porsche911',
-          done: false,
-          id: 1,
-          creationTime: 1666181630482,
-          dateDistance: 'less than a minute ago',
-          editing: false,
-        },
-        {
-          label: 'Porsche Cayman',
-          done: false,
-          id: 2,
-          creationTime: 1666181630482,
-          dateDistance: 'less than a minute ago',
-          editing: false,
-        },
-        {
-          label: 'Porsche Turbo S',
-          done: false,
-          id: 3,
-          creationTime: 1666181630482,
-          dateDistance: 'less than a minute ago',
-          editing: false,
-        },
-      ],
-    };
-  }
-
-  onToggleDone = (id) => {
-    this.setState(({ taskList }) => {
-      const newList = taskList.map((task) => ({
-        ...task,
-        done: task.id === id ? !task.done : task.done,
-      }));
-      return { taskList: newList };
-    });
-  };
-
-  deleteTask = (id) => {
-    this.setState(({ taskList }) => {
-      const indx = taskList.findIndex((el) => el.id === id);
-      const newTaskList = [...taskList.slice(0, indx), ...taskList.slice(indx + 1)];
-      return {
-        taskList: newTaskList,
-      };
-    });
-  };
-
-  addTask = (label) => {
-    this.maxId += 1;
-    const newTask = {
-      label,
+function App() {
+  const [taskList, setTaskList] = useState([
+    {
+      label: 'Porsche911',
       done: false,
-      id: this.maxId,
-      creationTime: Number(new Date()),
-      dateDistance: 'created less than a minute ago',
+      id: 1,
+      creationTime: 1666181630482,
+      dateDistance: 'less than a minute ago',
       editing: false,
-    };
-    this.setState(({ taskList }) => {
-      const newListTask = [...taskList, newTask];
-      return {
-        taskList: newListTask,
-      };
-    });
+      minutes: 0,
+      seconds: 0,
+    },
+    {
+      label: 'Nissan Skyline',
+      done: false,
+      id: 2,
+      creationTime: 1666181630482,
+      dateDistance: 'less than a minute ago',
+      editing: false,
+      minutes: 0,
+      seconds: 0,
+    },
+    {
+      label: 'Dodge Stealth',
+      done: false,
+      id: 3,
+      creationTime: 1666181630482,
+      dateDistance: 'less than a minute ago',
+      editing: false,
+      minutes: 0,
+      seconds: 0,
+    },
+  ]);
+  const [filtredTasks, setFiltredTasks] = useState(taskList);
+  const [filter, setFilter] = useState('all');
+
+  const changeFilter = (filtrus) => {
+    setFilter(filtrus);
   };
 
-  changeFilter = (filter) => {
-    this.setState(() => ({ filter }));
-  };
-
-  clearCompleted = () => {
-    this.setState(({ taskList }) => ({ taskList: taskList.filter((item) => !item.done) }));
-  };
-
-  refreshTime = () => {
-    this.setState(({ taskList }) => ({
-      taskList: taskList.map((elem) => {
-        const newElem = elem;
-        newElem.dateDistance = formatDistanceToNow(new Date(Number(newElem.creationTime)), { addSuffix: true });
-        return newElem;
-      }),
-    }));
-  };
-
-  changeLabel = (id, text) => {
-    this.setState(({ taskList }) => ({
-      taskList: taskList.map((elem) => {
-        const newElem = elem;
-        if (newElem.id === id) {
-          newElem.label = text;
-          newElem.editing = false;
-        }
-        return newElem;
-      }),
-    }));
-  };
-
-  onEdit = (id) => {
-    this.setState(({ taskList }) => ({
-      taskList: taskList.map((elem) => {
-        const newElem = elem;
-        if (newElem.id === id) {
-          newElem.editing = true;
-        }
-        return newElem;
-      }),
-    }));
-  };
-
-  render() {
-    setInterval(this.refreshTime, 10000);
-    let filtredTasks = [];
-    const { filter, taskList } = this.state;
+  useEffect(() => {
     if (filter === 'all') {
-      filtredTasks = taskList;
+      setFiltredTasks(taskList.filter((task) => task));
     }
     if (filter === 'completed') {
-      filtredTasks = taskList.filter((task) => task.done);
+      setFiltredTasks(taskList.filter((task) => task.done));
     }
     if (filter === 'active') {
-      filtredTasks = taskList.filter((task) => !task.done);
+      setFiltredTasks(taskList.filter((task) => !task.done));
     }
-    const doneCount = taskList.length - taskList.filter((task) => task.done).length;
-    const { done } = taskList;
-    return (
-      <section className="todoapp">
-        <NewTaskForm addTask={this.addTask} />
-        <section className="main">
-          <TaskList
-            onEdit={this.onEdit}
-            changeLabel={this.changeLabel}
-            taskList={filtredTasks}
-            onToggleDone={this.onToggleDone}
-            done={done}
-            onDestroy={this.onDestroy}
-            onDeleted={this.deleteTask}
-          />
-          <Footer doneCount={doneCount} changeFilter={this.changeFilter} clearCompleted={this.clearCompleted} />
-        </section>
+  }, [filter, taskList]);
+  const clearCompleted = () => {
+    setTaskList(taskList.filter((item) => !item.done));
+  };
+  const doneCount = taskList.length - taskList.filter((task) => task.done).length;
+  return (
+    <section className="todoapp">
+      <NewTaskForm setTaskList={setTaskList} taskList={taskList} />
+      <section className="main">
+        <TaskList taskList={filtredTasks} setTaskList={setTaskList} />
+        <Footer doneCount={doneCount} changeFilter={changeFilter} clearCompleted={clearCompleted} />
       </section>
-    );
-  }
+    </section>
+  );
 }
+export default App;

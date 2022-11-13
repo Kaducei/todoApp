@@ -131,6 +131,10 @@
   border-bottom: none;
   padding: 0;
 }
+.item-timer {
+  color: grey;
+  font-size: 13px;
+}
 
 .todo-list li.editing .edit {
   display: block;
@@ -141,4 +145,31 @@
 
 .todo-list li.editing .view {
   display: none;
+}
+.todo-list li .icon-pause,
+.todo-list li .icon-play {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+.icon-pause:after {
+  content: '⏸';
+}
+
+.icon-play:after {
+  content: '▶';
+  color: #8c5a5a;
+}
+.icon-play,
+.icon-pause {
+  cursor: pointer;
+  font-size: 18px;
+  width: 18px;
+}
+.icon-play:hover {
+  filter: contrast(50);
+}
+.icon-pause:hover {
+  filter: contrast(100);
 }
